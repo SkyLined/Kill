@@ -20,13 +20,13 @@ process ids similar to the first way of executing Kill.
 
 Kill will attempt to open the process for the given process id in order to kill
 it. If that fails in a way that indicate that no process is running with that
-id, it assumes that the process was already terminated and returns success:
+id, it assumes that the process was already terminated:
 
     H:\dev\Kill\bin>Kill_x64.exe --pids 1000 1002
     * Killing process with id 1000
-    * Process 9999 no longer exists.
+    * Process 9999 does not exist.
     * Killing process with id 1002
-    * Process 9999 no longer exists.
+    * Process 9999 does not exist.
 
 If a process does not terminate within 1 second of terminating it, Kill will
 return an error:
@@ -43,17 +43,18 @@ If a process cannot be opened or terminated, Kill will return an error as well:
     * Killing process with id 1000
     - Cannot terminate process 1000 (error 00000005).
 
-If all processes are successfully terminated, kill will return success:
+If all processes was already terminated, or successfully terminated, kill will
+report this:
 
     H:\dev\Kill\bin>Kill_x64.exe --pids 1000 1002
     * Killing process with id 1000
-    + Terminated process 1000.
+    * Process 1000 was already terminated.
     * Killing process with id 1002
     + Terminated process 1002.
 
 Kill will terminate as soon as it encounters an error. This means that if you
-are attempting to kill multiple processes, Kill may not attempt to terminate all
-of them if there is an error.
+are attempting to kill multiple processes, Kill may not attempt to terminate
+all of them if there is an error.
 
 Errorlevel
 ----------

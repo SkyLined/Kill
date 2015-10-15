@@ -1,3 +1,5 @@
 tmp/
+\#*
 *.suo
-\#*.cmd
+*.user
+*.filter
