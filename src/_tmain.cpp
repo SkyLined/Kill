@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <tchar.h>
 #include <tlhelp32.h>
+#include <Psapi.h> // EnumProcess
 
 typedef BOOL (WINAPI *tIsWow64Process)(HANDLE, PBOOL);
 tIsWow64Process _IsWow64Process;
@@ -8,6 +9,7 @@ tIsWow64Process _IsWow64Process;
 #include "fhGetSnapshot.h"
 #include "fbCloseHandleAndUpdateResult.h"
 #include "fhGetProcessIdForExecutableName.h"
+#include "fhProcessExistsForId.h"
 #include "fhTerminateProcessForId.h"
 #include "fhTerminateAllProcessesForExecutableName.h"
 #include "fuKill.h"

@@ -1,13 +1,17 @@
 HRESULT fhTerminateProcessForId(DWORD dwProcessId) {
   HRESULT hResult;
+  BOOL bExists;
   HANDLE hProcess = OpenProcess(PROCESS_TERMINATE | PROCESS_QUERY_LIMITED_INFORMATION | SYNCHRONIZE, FALSE, dwProcessId);
   if (!hProcess) {
-    if (GetLastError() == ERROR_INVALID_PARAMETER) {
-      _tprintf(_T("* Process %d does not exist.\r\n"), dwProcessId);
-      hResult = S_OK;
-    } else {
-      _tprintf(_T("- Cannot open process %d (error %08X).\r\n"), dwProcessId, GetLastError());
-      hResult = HRESULT_FROM_WIN32(GetLastError());
+    DWORD dwOpenProcessError = GetLastError();
+    hResult = fhProcessExistsForId(dwProcessId, bExists);
+    if (SUCCEEDED(hResult)) {
+      if (!bExists) {
+        _tprintf(_T("* Process %d does not exist.\r\n"), dwProcessId);
+      } else {
+        _tprintf(_T("- Cannot open process %d (error %08X).\r\n"), dwProcessId, dwOpenProcessError);
+        hResult = HRESULT_FROM_WIN32(dwOpenProcessError);
+      }
     }
   } else {
     DWORD dwExitCode;
@@ -27,19 +31,14 @@ HRESULT fhTerminateProcessForId(DWORD dwProcessId) {
       _tprintf(_T("- Cannot close process %d (error %08X).\r\n"), dwProcessId, GetLastError());
     }
     if (SUCCEEDED(hResult)) {
-      hProcess = OpenProcess(NULL, FALSE, dwProcessId);
-      if (hProcess) {
-        _tprintf(_T("- Process %d is supposed to have terminated but still exists.\r\n"), dwProcessId);
-        hResult = ERROR_SIGNAL_REFUSED;
-        if (!fbCloseHandleAndUpdateResult(hProcess, hResult)) {
-          _tprintf(_T("- Cannot close process %d (error %08X).\r\n"), dwProcessId, GetLastError());
+      hResult = fhProcessExistsForId(dwProcessId, bExists);
+      if (SUCCEEDED(hResult)) {
+        if (bExists) {
+          _tprintf(_T("- Process %d is supposed to have terminated but still exists.\r\n"), dwProcessId);
+          hResult = ERROR_SIGNAL_REFUSED;
+        } else {
+          _tprintf(_T("+ Terminated process %d.\r\n"), dwProcessId);
         }
-      } else if (GetLastError() == ERROR_INVALID_PARAMETER) {
-        _tprintf(_T("* Process %d no longer exists.\r\n"), dwProcessId);
-        hResult = S_OK;
-      } else {
-        _tprintf(_T("- Cannot open process %d (error %08X).\r\n"), dwProcessId, GetLastError());
-        hResult = HRESULT_FROM_WIN32(GetLastError());
       }
     }
   }

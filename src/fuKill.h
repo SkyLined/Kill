@@ -1,4 +1,4 @@
-#define fuFromString(sInput) ((UINT)_tcstoul(sInput, NULL, 10))
+#define fdwFromString(sInput) ((DWORD)_tcstoul(sInput, NULL, 10))
 
 UINT fuKill(UINT uArgumentsCount, _TCHAR* asArguments[]) {
   HRESULT hResult;
@@ -20,16 +20,16 @@ UINT fuKill(UINT uArgumentsCount, _TCHAR* asArguments[]) {
     bSuccess = FALSE;
   } else {
     for (UINT uArgumentIndex = 1; uArgumentIndex < uArgumentsCount; uArgumentIndex++) {
-      UINT uProcessId = fuFromString(asArguments[uArgumentIndex]);
-      if (uProcessId == 0 || uProcessId == ULONG_MAX) {
+      DWORD dwProcessId = fdwFromString(asArguments[uArgumentIndex]);
+      if (dwProcessId == 0 || dwProcessId == ULONG_MAX) {
         _tprintf(_T("* Killing processes for binary %s...\r\n"), asArguments[uArgumentIndex]);
         hResult = fhTerminateAllProcessesForExecutableName(asArguments[uArgumentIndex]);
       } else {
-        _tprintf(_T("* Killing process with id %d...\r\n"), uProcessId);
-        hResult = fhTerminateProcessForId(uProcessId);
+        _tprintf(_T("* Killing process with id %d...\r\n"), dwProcessId);
+        hResult = fhTerminateProcessForId(dwProcessId);
       }
       bSuccess &= SUCCEEDED(hResult);
     }
   }
-   return bSuccess ? 0 : 1;
+  return bSuccess ? 0 : 1;
 }
