@@ -31,5 +31,5 @@ UINT fuKill(UINT uArgumentsCount, _TCHAR* asArguments[]) {
       bSuccess &= SUCCEEDED(hResult);
     }
   }
-   return bSuccess ? 1 : 0;
+   return bSuccess ? 0 : 1;
 }
