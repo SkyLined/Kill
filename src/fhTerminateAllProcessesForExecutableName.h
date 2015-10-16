@@ -4,11 +4,8 @@ HRESULT fhTerminateAllProcessesForExecutableName(const _TCHAR* sExecutableName) 
   BOOL bProcessFound;
   do {
     hResult = fhGetProcessIdForExecutableName(sExecutableName, dwProcessId, bProcessFound);
-    if (!SUCCEEDED(hResult)) return hResult;
-    if (bProcessFound) {
-      hResult = fhTerminateProcessForId(dwProcessId);
-      if (!SUCCEEDED(hResult)) return hResult;
-    }
-  } while (bProcessFound);
+    if (!SUCCEEDED(hResult) || !bProcessFound) return hResult;
+    hResult = fhTerminateProcessForId(dwProcessId);
+  } while (SUCCEEDED(hResult));
   return hResult;
 }
