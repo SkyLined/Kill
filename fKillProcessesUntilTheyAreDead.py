@@ -1,9 +1,6 @@
 import os, re, subprocess, time;
-from dxConfig import dxConfig;
-
+from dxKillConfig import dxKillConfig;
 sOSISA = {"AMD64": "x64", "x86": "x86"}[os.getenv("PROCESSOR_ARCHITEW6432") or os.getenv("PROCESSOR_ARCHITECTURE")];
-assert dxConfig["sKillBinaryPath_%s" % sOSISA] and os.path.isfile(dxConfig["sKillBinaryPath_%s" % sOSISA]), \
-    "Cannot find Kill binary for %s at %s" % (sOSISA, dxConfig["sKillBinaryPath_%s" % sOSISA]);
 
 def fKillProcessesUntilTheyAreDead(auProcessIds):
   # Calling os.kill for a running process should kill it without throwing an exception. Calling os.kill for a
@@ -11,8 +8,10 @@ def fKillProcessesUntilTheyAreDead(auProcessIds):
   # the right exception is thrown can be used to make sure the process is terminated.
   for x in xrange(60):
     assert auProcessIds, "Nothing to kill";
-    sKillBinaryPath = dxConfig["sKillBinaryPath_%s" % sOSISA];
-    asKillCommand = [sKillBinaryPath, "--pids"] + [str(uProcessId) for uProcessId in auProcessIds];
+    sKillBinaryPath = dxKillConfig["sKillBinaryPath_%s" % sOSISA];
+    assert sKillBinaryPath and os.path.isfile(sKillBinaryPath), \
+        "No %s Kill binary found at %s" % (sOSISA, sKillBinaryPath);
+    asKillCommand = [sKillBinaryPath] + [str(uProcessId) for uProcessId in auProcessIds];
     oKillProcess = subprocess.Popen(asKillCommand, stdout=subprocess.PIPE, stderr=subprocess.PIPE);
     (sStdOut, sStdErr) = oKillProcess.communicate();
     oKillProcess.stdout.close();
