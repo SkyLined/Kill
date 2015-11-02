@@ -1,7 +1,6 @@
 #include <windows.h>
 #include <tchar.h>
 #include <tlhelp32.h>
-#include <Psapi.h> // EnumProcess
 
 typedef BOOL (WINAPI *tIsWow64Process)(HANDLE, PBOOL);
 tIsWow64Process _IsWow64Process;

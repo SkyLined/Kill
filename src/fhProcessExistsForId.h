@@ -1,3 +1,4 @@
+#include <Psapi.h> // EnumProcesses
 
 HRESULT fhProcessExistsForId(DWORD dwProcessId, BOOL &bExists) {
   bExists = FALSE;
