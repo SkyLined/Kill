@@ -36,7 +36,7 @@ class cVersionInformation(object):
     return oVersionInformation.__sLatestVersion;
   
   @property
-  def bUpdateAvailable(oVersionInformation):
+  def bUpToDate(oVersionInformation):
     if not oVersionInformation.__bRemoteVersionRetreived:
       oVersionInformation.__fRetreiveRemoteVersion();
     return oVersionInformation.__bUpToDate;
