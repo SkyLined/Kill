@@ -1,1 +1,1 @@
-from fKillProcessesUntilTheyAreDead import fKillProcessesUntilTheyAreDead;
+from Kill import *;
