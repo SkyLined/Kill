@@ -1,5 +1,6 @@
 tmp/
 \#*
+*.VC.db
 *.suo
 *.user
 *.filters
